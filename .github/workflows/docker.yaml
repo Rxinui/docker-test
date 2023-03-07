@@ -35,7 +35,7 @@ jobs:
         run: docker build -t yolo-apache:latest .
         
       - name: "Démarrer une instance de yolo-apache"
-        run: docker run --rm --name yolo-1 -p 8080:80 yolo-apache:latest
+        run: docker run -d --rm --name yolo-1 -p 8080:80 yolo-apache:latest
 
       - name: "Tester la connexion sur yolo-1"
         run: sleep 10 && curl -s -I localhost:8080 | head -1
