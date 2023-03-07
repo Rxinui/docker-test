@@ -8,8 +8,9 @@ docker build -t yolo-apache:latest .
 
 Create and run a container from a docker image
 ```sh
-docker run --rm --name yolo-1 -p 8080:80 yolo-apache:latest
+docker run -d --rm --name yolo-1 -p 8080:80 yolo-apache:latest
 ```
+**NOTE**: on GitHub Actions `-d` flag is important otherwise, the step is blocked and cannot move forward.
 
 Test the apache server with curl and get HTTP status
 ```sh

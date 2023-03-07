@@ -38,4 +38,24 @@ jobs:
         run: docker run -d --rm --name yolo-1 -p 8080:80 yolo-apache:latest
 
       - name: "Tester la connexion sur yolo-1"
-        run: sleep 10 && curl -s -I localhost:8080 | head -1
+        shell: bash
+        run: |
+          sleep 10 
+          curl -s -I localhost:8080
+          if [ $? -eq 0 ]; then
+            echo "[INFO] Serveur web yolo-1 est accessible"
+            exit 0
+          fi
+          echo "[ERROR] Serveur web yolo-1 est inaccessible"
+          exit 1 
+
+      - name: "Push docker image sur Docker Hub"
+        env:
+          DOCKER_LOGIN: rxinui
+        run: |
+          echo "[INFO] Login to Docker Hub account"
+          docker login -u="${DOCKER_LOGIN}" -p="${{ secrets.DOCKER_HUB_PASSWORD }}"
+          echo "[INFO] Rename image tag to comply with Docker Hub naming convention"
+          docker tag yolo-apache:latest ${DOCKER_LOGIN}/yolo-apache:latest 
+          echo "[INFO] Push yolo-apache image onto Docker Hub"
+          docker image push ${DOCKER_LOGIN}/yolo-apache:latest 
